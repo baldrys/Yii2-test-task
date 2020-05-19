@@ -3,11 +3,32 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\bootstrap\Modal;
+use lo\widgets\Toggle;
+use app\models\User;
+use yii2mod\editable\EditableColumn;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\UserSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 /* @var $model app\models\User */
+
+$js = <<< JS
+    function sendRequest(status, id){
+        $.ajax({
+            url:'/users/status-update',
+            method:'post',
+            data:{status:Number(status), id:id},
+            success:function(data){
+                console.log(data);
+            },
+            error:function(jqXhr,status,error){
+                console.log(error);
+            }
+        });
+    }
+JS;
+
+$this->registerJs($js, \yii\web\View::POS_READY);
 
 $this->title = 'Users';
 $this->params['breadcrumbs'][] = $this->title;
@@ -55,11 +76,30 @@ $this->params['breadcrumbs'][] = $this->title;
             'phone_number',
             'name',
             'balance',
+
+
             [
                 'attribute' => 'status',
+                // 'content' => function ($model) {
+                //     return $model->getStatusLabels()[$model->status];
+                // }
                 'content' => function ($model) {
-                    return $model->getStatusLabels()[$model->status];
+                    return Toggle::widget(
+                        [
+                            'name' => 'status', // input name. Either 'name', or 'model' and 'attribute' properties must be specified.
+                            'checked' => $model->status,
+                            'options' => [
+                                'data-on' =>  $model->getStatusLabels()[User::STATUS_ACTIVE],
+                                'data-off' =>  $model->getStatusLabels()[User::STATUS_BANNED]
+                            ], // checkbox options. More data html options [see here](http://www.bootstraptoggle.com)
+                            'clientEvents' => [
+                                "change" => "function(e){ sendRequest(e.currentTarget.checked, $model->id); }",
+                                // "switchChange.bootstrapSwitch" => "function() { log('switchChange'); }",
+                            ]
+                        ]
+                    );
                 }
+
             ],
 
             ['class' => 'yii\grid\ActionColumn'],

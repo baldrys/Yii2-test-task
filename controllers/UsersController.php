@@ -132,4 +132,13 @@ class UsersController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+
+    public function actionStatusUpdate()
+    {
+        $id = Yii::$app->request->post()['id'];
+        $model = $this->findModel($id);
+        $model->status = Yii::$app->request->post()['status'];
+        $model->save();
+    }
 }
