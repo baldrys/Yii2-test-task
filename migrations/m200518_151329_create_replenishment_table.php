@@ -16,7 +16,7 @@ class m200518_151329_create_replenishment_table extends Migration
             'id' => $this->primaryKey(),
             'user_id' => $this->integer()->notNull(),
             'amount' => $this->decimal()->notNull(),
-            'date' => $this->date(),
+            'date' => $this->dateTime(),
         ]);
 
         // creates index for column `author_id`

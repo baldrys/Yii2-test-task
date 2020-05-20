@@ -3,6 +3,9 @@
 namespace app\models;
 
 use Yii;
+use \yii\db\Expression;
+use app\models\User;
+use app\components\ReplenishmentValidator;
 
 /**
  * This is the model class for table "replenishments".
@@ -12,7 +15,7 @@ use Yii;
  * @property float $amount
  * @property string|null $date
  *
- * @property Users $user
+ * @property User $user
  */
 class Replenishment extends \yii\db\ActiveRecord
 {
@@ -32,9 +35,13 @@ class Replenishment extends \yii\db\ActiveRecord
         return [
             [['user_id', 'amount'], 'required'],
             [['user_id'], 'integer'],
-            [['amount'], 'number'],
+            // [['user_id'], 'exist', 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['user_id'], ReplenishmentValidator::className()],
+            [['amount'], 'number', 'min' => 0.0],
             [['date'], 'safe'],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
+            // ['amount', 'validateStatus', 'when' => function ($model) {
+            //     return $model->isNewRecord;
+            // }],
         ];
     }
 
@@ -58,6 +65,24 @@ class Replenishment extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(Users::className(), ['id' => 'user_id']);
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
+    }
+
+    public function beforeSave($insert)
+    {
+        if ($this->isNewRecord)
+            $this->date = new Expression('NOW()');
+
+        return parent::beforeSave($insert);
+    }
+
+    public function validateStatus($attribute, $params)
+    {
+        print_r($attribute, $params);
+        die;
+
+        if ($this->getUser()->status == 1) {
+            $this->addError('amount', 'User is banned!');
+        }
     }
 }

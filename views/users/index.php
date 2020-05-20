@@ -11,6 +11,7 @@ use yii2mod\editable\EditableColumn;
 /* @var $searchModel app\models\UserSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 /* @var $model app\models\User */
+/* @var $replenishmentModel app\models\Replenishment */
 
 $js = <<< JS
     function sendRequest(status, id){
@@ -106,5 +107,27 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]); ?>
 
+    <?php
+    Modal::begin([
+        'header' => '<h2>Add balance to the user</h2>',
+        'toggleButton' => [
+            'label' => 'Add balance',
+            'class' => 'btn btn-success',
+        ],
+
+    ]); ?>
+
+
+    <div class="replenishment-create">
+
+        <?= $this->render('../replenishment/_form', [
+            'model' => $replenishmentModel,
+        ]) ?>
+
+    </div>
+
+
+
+    <?php Modal::end(); ?>
 
 </div>
