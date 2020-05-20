@@ -40,7 +40,10 @@ class ReplenishmentController extends Controller
     {
         $searchModel = new ReplenishmentSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        // if (Yii::$app->request->queryParams) {
+        //     print_r(Yii::$app->request->queryParams);
+        //     die;
+        // }
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -142,7 +145,12 @@ class ReplenishmentController extends Controller
     {
         $searchModel = new ReplenishmentSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        print_r(Yii::$app->request->queryParams);
+        die;
+        // if (Yii::$app->request->queryParams) {
+        //     print_r(Yii::$app->request->queryParams);
+        //     die;
+        // }
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,

@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use kartik\daterange\DateRangePicker;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\ReplenishmentSearch */
@@ -26,15 +27,39 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
             [
-                'attribute' => 'user',
+                'attribute' => 'date',
+                'filter' =>
+                DateRangePicker::widget([
+                    'model' => $searchModel,
+                    'attribute' => 'createTimeRange',
+                    'convertFormat' => true,
+                    'startAttribute' => 'createTimeStart',
+                    'endAttribute' => 'createTimeEnd',
+                    'pluginOptions' => [
+                        'timePicker' => true,
+                        'timePickerIncrement' => 15,
+                        'showDropdowns' => true,
+                        'timePicker24Hour' => true,
+                        'locale' => [
+                            'format' => $searchModel::TIME_FORMAT,
+                        ]
+                    ]
+                ])
+            ],
+            [
+                'attribute' => 'user_id',
                 'value' => 'user.name'
             ],
+            // 'user.id',
             'amount',
-            'date',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'header' => 'Action',
+                'content' => function ($model) {
+                    return  Html::a('Cancel', ['delete'], ['class' => 'btn btn-danger']);
+                }
+            ],
         ],
     ]); ?>
 

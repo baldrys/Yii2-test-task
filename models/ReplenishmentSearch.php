@@ -5,21 +5,46 @@ namespace app\models;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Replenishment;
+use kartik\daterange\DateRangeBehavior;
 
 /**
  * ReplenishmentSearch represents the model behind the search form of `app\models\Replenishment`.
  */
 class ReplenishmentSearch extends Replenishment
 {
+    // public $createTimeRange;
+    // public $createTimeStart;
+    // public $createTimeEnd;
+
+    const TIME_FORMAT = 'Y-m-d H:i:s';
+
+    public $createTimeRange;
+    public $createTimeStart;
+    public $createTimeEnd;
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => DateRangeBehavior::className(),
+                'attribute' => 'createTimeRange',
+                'dateStartAttribute' => 'createTimeStart',
+                'dateEndAttribute' => 'createTimeEnd',
+            ]
+        ];
+    }
+
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['id', 'user_id'], 'integer'],
+            [['id'], 'integer'],
             [['amount'], 'number'],
+            [['user_id', 'date_start', 'date_end'], 'safe'],
             [['date'], 'safe'],
+            [['createTimeRange'], 'match', 'pattern' => '/^.+\s\-\s.+$/'],
         ];
     }
 
@@ -57,13 +82,25 @@ class ReplenishmentSearch extends Replenishment
             return $dataProvider;
         }
 
-        // grid filtering conditions
+        $query->joinWith(['user']);
+
         $query->andFilterWhere([
-            'id' => $this->id,
-            'user_id' => $this->user_id,
-            'amount' => $this->amount,
             'date' => $this->date,
+            'amount' => $this->amount,
+
         ]);
+
+        if (User::find()->where(['id' => $this->user_id])->exists()) {
+            $query->andFilterWhere(['like', 'users.id', $this->user_id]);
+        } else {
+            $query->andFilterWhere(['like', 'users.phone_number', $this->user_id]);
+        }
+
+        if (!is_null($this->createTimeRange) && strpos($this->createTimeRange, ' - ') !== false) {
+            list($start_date, $end_date) = explode(' - ', $this->createTimeRange);
+            $query->andFilterWhere(['between', 'date', $start_date, $end_date]);
+            // $this->date = null;
+        }
 
         return $dataProvider;
     }
