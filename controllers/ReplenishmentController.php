@@ -10,6 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\widgets\ActiveForm;
 use yii\web\Response;
+use app\models\User;
 
 /**
  * ReplenishmentController implements the CRUD actions for Replenishment model.
@@ -70,7 +71,15 @@ class ReplenishmentController extends Controller
         if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             return ActiveForm::validate($model);
-        } elseif ($model->load(Yii::$app->request->post()) && $model->save()) {
+        } elseif (Yii::$app->request->isPost) {
+            $postData = Yii::$app->request->post();
+            $id = $postData['Replenishment']['user_id'];
+            $userById = User::find()->where(['id' => $id]);
+            $userByphone = User::find()->where(['phone_number' => $id]);
+            if (!$userById->exists() && $userByphone->exists()) {
+                $postData['Replenishment']['user_id'] = $userByphone->one()->id;
+            }
+            $model->load($postData) && $model->save();
             return $this->redirect(['users/index']);
         }
 
