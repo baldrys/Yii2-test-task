@@ -76,4 +76,10 @@ class User extends \yii\db\ActiveRecord
             self::STATUS_BANNED => 'Banned',
         ];
     }
+
+    public function addBalance($amount)
+    {
+        $this->balance += $amount;
+        return $this;
+    }
 }
