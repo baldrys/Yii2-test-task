@@ -82,6 +82,12 @@ class Replenishment extends \yii\db\ActiveRecord
         return parent::afterSave($insert, $changedAttributes);
     }
 
+    public function beforeDelete()
+    {
+        $this->getUser()->one()->addBalance(-$this->amount)->save();
+        return parent::beforeDelete();
+    }
+
     public function validateStatus($attribute, $params)
     {
         print_r($attribute, $params);

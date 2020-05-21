@@ -44,9 +44,12 @@ class ReplenishmentController extends Controller
         //     print_r(Yii::$app->request->queryParams);
         //     die;
         // }
+        $totalAmount = $dataProvider->query->sum('amount');
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'totalAmount' => $totalAmount ? $totalAmount : 0
         ]);
     }
 

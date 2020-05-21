@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\grid\GridView;
 use kartik\daterange\DateRangePicker;
 
@@ -53,15 +54,25 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             // 'user.id',
             'amount',
-
             [
-                'header' => 'Action',
-                'content' => function ($model) {
-                    return  Html::a('Cancel', ['delete'], ['class' => 'btn btn-danger']);
-                }
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{deleteRep} {leadUpdate}',
+                'buttons' => [
+                    'deleteRep' => function ($url, $model) {
+                        $url = Url::to(['replenishment/delete', 'id' => $model->id]);
+                        return Html::a(
+                            'Cancel',
+                            $url,
+                            ['class' => 'btn btn-danger', 'data-method' => 'post'],
+                        );
+                    },
+                ]
             ],
+
         ],
     ]); ?>
 
-
+    <p>
+        Total amount: <?= $totalAmount ?>
+    </p>
 </div>
