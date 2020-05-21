@@ -99,7 +99,6 @@ class ReplenishmentSearch extends Replenishment
         if (!is_null($this->createTimeRange) && strpos($this->createTimeRange, ' - ') !== false) {
             list($start_date, $end_date) = explode(' - ', $this->createTimeRange);
             $query->andFilterWhere(['between', 'date', $start_date, $end_date]);
-            // $this->date = null;
         }
 
         return $dataProvider;

@@ -35,13 +35,9 @@ class Replenishment extends \yii\db\ActiveRecord
         return [
             [['user_id', 'amount'], 'required'],
             [['user_id'], 'integer'],
-            // [['user_id'], 'exist', 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['user_id'], ReplenishmentValidator::className()],
             [['amount'], 'number', 'min' => 0.0],
             [['date'], 'safe'],
-            // ['amount', 'validateStatus', 'when' => function ($model) {
-            //     return $model->isNewRecord;
-            // }],
         ];
     }
 

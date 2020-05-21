@@ -39,8 +39,6 @@ class User extends \yii\db\ActiveRecord
             [['balance'], 'number'],
             [['status'], 'required'],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_BANNED]],
-            //['status', 'default', 'value' => UserStatusEnum::ACTIVE],
-            // ['status', 'in', 'range' => UserStatusEnum::getConstantsByName()],
             [['phone_number', 'name'], 'string', 'max' => 255],
         ];
     }
