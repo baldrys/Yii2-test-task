@@ -13,9 +13,9 @@ use yii\web\Response;
 use app\models\User;
 
 /**
- * ReplenishmentController implements the CRUD actions for Replenishment model.
+ * ReplenishmentsController implements the CRUD actions for Replenishment model.
  */
-class ReplenishmentController extends Controller
+class ReplenishmentsController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -40,29 +40,12 @@ class ReplenishmentController extends Controller
     {
         $searchModel = new ReplenishmentSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        // if (Yii::$app->request->queryParams) {
-        //     print_r(Yii::$app->request->queryParams);
-        //     die;
-        // }
         $totalAmount = $dataProvider->query->sum('amount');
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'totalAmount' => $totalAmount ? $totalAmount : 0
-        ]);
-    }
-
-    /**
-     * Displays a single Replenishment model.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
         ]);
     }
 
@@ -89,30 +72,9 @@ class ReplenishmentController extends Controller
             return $this->redirect(['users/index']);
         }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        return $this->redirect(['users/index']);
     }
 
-    /**
-     * Updates an existing Replenishment model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
 
     /**
      * Deletes an existing Replenishment model.
@@ -142,21 +104,5 @@ class ReplenishmentController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
-    }
-
-    public function actionReport()
-    {
-        $searchModel = new ReplenishmentSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        print_r(Yii::$app->request->queryParams);
-        die;
-        // if (Yii::$app->request->queryParams) {
-        //     print_r(Yii::$app->request->queryParams);
-        //     die;
-        // }
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
     }
 }

@@ -17,8 +17,8 @@ class UserSearch extends User
     public function rules()
     {
         return [
-            [['id', 'status'], 'integer'],
-            [['phone_number', 'name'], 'safe'],
+            [['id'], 'integer'],
+            [['phone_number', 'name', 'status'], 'safe'],
             [['balance'], 'number'],
         ];
     }
@@ -61,8 +61,15 @@ class UserSearch extends User
         $query->andFilterWhere([
             'id' => $this->id,
             'balance' => $this->balance,
-            'status' => $this->status,
         ]);
+
+
+        if ($this->status !== null && $this->status !== '') {
+            $statusId = array_search($this->status, $this->getStatusLabels());
+            $statusId = $statusId !== false ? $statusId : -1;
+            $query->andFilterWhere(['status' => $statusId]);
+        }
+
 
         $query->andFilterWhere(['like', 'phone_number', $this->phone_number])
             ->andFilterWhere(['like', 'name', $this->name]);

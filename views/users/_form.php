@@ -11,7 +11,9 @@ use yii\widgets\ActiveForm;
 
 <div class="user-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+        'action' => ['/users/create'],
+    ]); ?>
 
     <?= $form->field($model, 'phone_number')->textInput(['maxlength' => true]) ?>
 

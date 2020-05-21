@@ -5,7 +5,7 @@ use yii\grid\GridView;
 use yii\bootstrap\Modal;
 use lo\widgets\Toggle;
 use app\models\User;
-use yii2mod\editable\EditableColumn;
+
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\UserSearch */
@@ -32,7 +32,6 @@ JS;
 $this->registerJs($js, \yii\web\View::POS_READY);
 
 $this->title = 'Users';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="user-index">
@@ -81,9 +80,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
             [
                 'attribute' => 'status',
-                // 'content' => function ($model) {
-                //     return $model->getStatusLabels()[$model->status];
-                // }
                 'content' => function ($model) {
                     return Toggle::widget(
                         [
@@ -95,15 +91,12 @@ $this->params['breadcrumbs'][] = $this->title;
                             ], // checkbox options. More data html options [see here](http://www.bootstraptoggle.com)
                             'clientEvents' => [
                                 "change" => "function(e){ sendRequest(e.currentTarget.checked, $model->id); }",
-                                // "switchChange.bootstrapSwitch" => "function() { log('switchChange'); }",
                             ]
                         ]
                     );
                 }
 
             ],
-
-            ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
 
@@ -120,7 +113,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="replenishment-create">
 
-        <?= $this->render('../replenishment/_form', [
+        <?= $this->render('../replenishments/_form', [
             'model' => $replenishmentModel,
         ]) ?>
 

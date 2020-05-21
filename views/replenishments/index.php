@@ -9,16 +9,12 @@ use kartik\daterange\DateRangePicker;
 /* @var $searchModel app\models\ReplenishmentSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Replenishments';
+$this->title = 'Replenishments report';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="replenishment-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Create Replenishment', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); 
     ?>
@@ -26,8 +22,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'showFooter' => true,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            ['class' => 'yii\grid\SerialColumn', 'footer' => 'Total'],
             [
                 'attribute' => 'date',
                 'filter' =>
@@ -52,14 +49,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'user_id',
                 'value' => 'user.name'
             ],
-            // 'user.id',
-            'amount',
+            [
+                'attribute' => 'amount',
+                'footer' => $totalAmount,
+            ],
             [
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{deleteRep} {leadUpdate}',
                 'buttons' => [
                     'deleteRep' => function ($url, $model) {
-                        $url = Url::to(['replenishment/delete', 'id' => $model->id]);
+                        $url = Url::to(['replenishments/delete', 'id' => $model->id]);
                         return Html::a(
                             'Cancel',
                             $url,
@@ -72,7 +71,4 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]); ?>
 
-    <p>
-        Total amount: <?= $totalAmount ?>
-    </p>
 </div>

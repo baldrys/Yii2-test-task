@@ -12,7 +12,7 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin([
         'enableClientValidation' => false,
-        'action' => ['/replenishment/create'],
+        'action' => ['/replenishments/create'],
         'enableAjaxValidation' => true,
         'id' => 'replenishment-form',
     ]); ?>
